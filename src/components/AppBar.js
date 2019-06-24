@@ -1,30 +1,21 @@
-import React, {Component} from 'react';
+import React from 'react';
+import { makeStyles } from '@material-ui/core/styles';
 import AppBar from '@material-ui/core/AppBar';
 import Toolbar from '@material-ui/core/Toolbar';
 import Typography from '@material-ui/core/Typography';
 import Button from '@material-ui/core/Button';
 import IconButton from '@material-ui/core/IconButton';
 import MenuIcon from '@material-ui/icons/Menu';
+
+import apiKey from '../apiKey';
 import { Input, InputAdornment } from '@material-ui/core';
 
-import './App.css';
-import apiKey from './apiKey';
 
-import MovieCard from './components/MovieCard';
-//import AppBar from './components/AppBar';
-import MovieDialog from './components/MovieDialog';
 
-const originalMovies = [
-  {id:1, title: 'Psych'},
-  {id:2, title: 'Community'}
-];
-
-class App extends Component {
+export default class ButtonAppBar extends React.Component {
   state = {
-    movies:[],
-    selectedMovie: null,
     searchText: ''
-  };
+  }
 
   searchTextChanged = e => {
     this.setState({searchText: e.target.value});
@@ -36,23 +27,9 @@ class App extends Component {
     const json = await response.json();
     this.setState({movies: json.results});
   }
-
-  selectMovie = movie => this.setState({selectedMovie: movie});
-  clearMovie = () => this.setState({selectedMovie: null});
-
-  async componentDidMount(){
-    //this.setState({movies: originalMovies});
-    const response = await fetch('https://api.themoviedb.org/3/movie/top_rated?api_key='+apiKey);
-    const json = await response.json();
-    this.setState({movies: json.results});
-  }
-
   render(){
-    const {movies, selectedMovie} = this.state;
-
     return (
       <div>
-        <div>
         <AppBar position="fixed">
           <Toolbar>
             <IconButton edge="start" color="inherit" aria-label="Menu">
@@ -77,15 +54,6 @@ class App extends Component {
           </Toolbar>
         </AppBar>
       </div>
-        <div className="App">
-          {
-            movies.map(movie => <MovieCard key={movie.id} movie={movie} selectMovie={this.selectMovie}/>)
-          }
-        </div>
-        <MovieDialog movie={selectedMovie} handleClose={this.clearMovie}/>
-      </div>
     );
   }
 }
-
-export default App;
